@@ -44,6 +44,16 @@ get '/new' do
     erb :form
 end
 
+get '/:shortURL' do
+  rowData = Link.find_by_shortLink(params[:shortURL])
+  if rowData
+    redirect "http://#{rowData.realLink}"
+  else
+    @links = Link.all
+    erb :index
+  end
+end
+
 post '/new' do
     # PUT CODE HERE TO CREATE NEW SHORTENED LINKS
     userInput = params[:url]
@@ -51,7 +61,7 @@ post '/new' do
     if rowData
       return shortenedLink = rowData.shortLink
     else
-      shortenedLink = SecureRandom.urlsafe_base64
+      shortenedLink = convertLink(userInput)
       @newLink = Link.new(shortLink: shortenedLink, realLink: userInput)
       @newLink.save
       return shortenedLink
@@ -59,3 +69,14 @@ post '/new' do
 end
 
 # MORE ROUTES GO HERE
+
+###########################################################
+# Helpers
+###########################################################
+
+def convertLink originalLink
+  begin
+    result = SecureRandom.urlsafe_base64[0..4]
+  end while Link.find_by_shortLink(result)
+  result
+end
