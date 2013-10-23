@@ -3,7 +3,7 @@
 <ul class="links">
 <% @links.each do |link| %>
   <li>
-    <a href="http://<%= link.realLink %>"><%= link.shortLink %></a>
+    <a href="http://<%= link.realLink %>">/<%= link.shortLink %></a>
   </li>
 <% end %>
 </ul>

@@ -47,7 +47,7 @@ end
 get '/:shortURL' do
   rowData = Link.find_by_shortLink(params[:shortURL])
   if rowData
-    redirect "http://#{rowData.realLink}"
+    redirect rowData.realLink
   else
     @links = Link.all
     erb :index
@@ -57,6 +57,7 @@ end
 post '/new' do
     # PUT CODE HERE TO CREATE NEW SHORTENED LINKS
     userInput = params[:url]
+    userInput = 'http://' + userInput unless userInput[0..7] == 'http://'
     rowData = Link.find_by_realLink(userInput)
     if rowData
       return shortenedLink = rowData.shortLink
